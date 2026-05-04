@@ -32,7 +32,13 @@ class Shapes(object):
         return area / width
 
 
+
+    #   calculate the perimeter of a square
+    def perimeterOfSquare(self, side):
+        return side * 4
+
     # calculate the perimeter of a square
+
 
     # calculate the side of a square
 
