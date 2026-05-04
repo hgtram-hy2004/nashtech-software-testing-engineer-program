@@ -20,7 +20,17 @@ class Shapes(object):
             raise ValueError("Provide (area & length) or (perimeter & length)")
     # calculate the length of a rectangle
 
+
     # calculate the area of square
+
+    #   calculate the length of a rectangle
+    @staticmethod
+    def calculate_rectangle_length(area, width):
+        """Calculates the length of a rectangle given its area and width."""
+        if area < 0 or width <= 0:
+            raise ValueError("Area must be non-negative and width must be greater than zero")
+        return area / width
+
 
     # calculate the perimeter of a square
 
