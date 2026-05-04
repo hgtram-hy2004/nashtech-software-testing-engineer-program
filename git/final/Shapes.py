@@ -2,6 +2,9 @@ import math
 
 
 class Shapes(object):
+    """
+    This class is used as utils to calculate properties of all shapes
+    """
 
     # calculate the area of a rectangle
 
@@ -15,11 +18,10 @@ class Shapes(object):
 
     #   calculate the perimeter of a square
     def perimeterOfSquare(self, side):
-        return 4 * side
+        return side * 4
 
     #   calculate the side of a square
 
     #   calculate the area of a circle
 
     #   calculate the radius of a circle
-
