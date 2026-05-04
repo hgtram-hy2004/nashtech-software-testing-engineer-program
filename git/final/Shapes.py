@@ -8,9 +8,16 @@ class Shapes(object):
 
     # calculate the area of a rectangle
 
-    # calculate the perimeter of a rectangle
-
+    # Le Tan Dat : calculate the perimeter of a rectangle
+    @staticmethod
+    def calculate_rectangle_perimeter(length, width):
+        """Calculates the perimeter of a rectangle given its length and width."""
+        if length <= 0 or width <= 0:
+            raise ValueError("Length and width must be greater than zero")
+        return 2 * (length + width)
+    
     # calculate the width of a rectangle
+    @staticmethod
     def rectangle_width(area=None, length=None, perimeter=None):
         if area is not None and length is not None:
             return area / length

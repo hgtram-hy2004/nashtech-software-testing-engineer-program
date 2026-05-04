@@ -2,6 +2,23 @@ from Shapes import Shapes
 
 def main():
 
+    # 2. Le Tan Dat: Calculate Rectangle Perimeter
+    try:
+        width = float(input("Enter the width of the rectangle: "))
+        length = float(input("Enter the length of the rectangle: "))
+
+        perimeter = Shapes.calculate_rectangle_perimeter(length, width)
+
+        print(f"The perimeter of the rectangle is: {perimeter}")
+    except ValueError as error:
+        print(f"Invalid rectangle perimeter input: {error}")
+    
+    #Rectangle
+    width = float(input("Enter the width of the rectangle: "))
+    length = float(input("Enter the length of the rectangle: "))
+    print(Shapes.rectangle_width(perimeter=perimeter, length=length))
+
+
     
     
 
