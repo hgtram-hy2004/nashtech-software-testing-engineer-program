@@ -9,8 +9,8 @@ def main():
     area = 50
     width = 5
     #1. Area of The Rectangle
-    length = 10
-    print("The area of the rectangle: ", Shapes.rectangle_area(length, width))
+    length_area = 10
+    print("Area of ​​rectangle: ", Shapes.rectangle_area(length_area, width))
     #6. Perimeter of The Square 
     shapes = Shapes()
     print("The perimeter of the square is:", shapes.perimeterOfSquare(8))
