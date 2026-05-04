@@ -7,7 +7,10 @@ class Shapes(object):
     """
 
     # calculate the area of a rectangle
-
+    def rectangle_area(length, width):
+        if not isinstance(length, (int, float)) or not isinstance(width, (int, float)):
+            raise TypeError("Length and width must be numbers")
+        return length * width
     # calculate the perimeter of a rectangle
 
     # calculate the width of a rectangle
