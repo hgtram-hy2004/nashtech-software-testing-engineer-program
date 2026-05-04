@@ -15,9 +15,7 @@ def main():
 
 
     #3. Rectangle
-    width = float(input("Enter the width of the rectangle: "))
-    length = float(input("Enter the length of the rectangle: "))
-    print(Shapes.rectangle_width(area=area, length=length, parameter=perimeter))
+    print("The width of the rectangle is: ",Shapes.rectangle_width(area=50, length=10))
 
     
     
