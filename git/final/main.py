@@ -1,6 +1,10 @@
 from Shapes import Shapes
 
 def main():
+
+    
+    
+
     #global variable
     area = 50
     width = 5
@@ -22,6 +26,10 @@ def main():
     print(f"Rectangle with Area={area} and Width={width}:")
     print(f"- Calculated Length: {length}")
 
+    #7. Square side 
+    print("Side from area:", Shapes.calculate_square_side(area=64))        # 8.0
+    print("Side from perimeter:", Shapes.calculate_square_side(perimeter=20))  # 5.0
 
 if __name__ == "__main__":
+    
     main()
