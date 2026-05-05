@@ -7,6 +7,12 @@ class Shapes(object):
     """
 
     # calculate the area of a rectangle
+    def rectangle_area(length, width):
+        if not isinstance(length, (int, float)) or not isinstance(width, (int, float)):
+            raise TypeError("Length and width must be numbers")
+        return length * width
+    # calculate the perimeter of a rectangle
+
 
     # Le Tan Dat : calculate the perimeter of a rectangle
     @staticmethod
@@ -60,14 +66,6 @@ class Shapes(object):
         else:
             raise ValueError("Please provide either area or perimeter")
 
-
-    # if __name__ == "__main__":
-        # Test cases
-        
-    
-    #   calculate the area of a circle
-
-    # calculate the side of a square
 
     # calculate the area of a circle
 
