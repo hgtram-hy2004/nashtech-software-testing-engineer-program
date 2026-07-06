@@ -1,0 +1,24 @@
+{
+  "account": {
+    "userId": "5673915f-e254-4f42-8948-7fa9810a7d5f",
+    "username": "hgtram.hy04",
+    "password": "Hgtram@hy2004"
+  },
+  "book": {
+    "validIsbn": "9781449325862",
+    "newIsbn": "9781449365035"
+  },
+  "expectedBooks": [
+    {
+      "isbn": "9781449325862",
+      "title": "Git Pocket Guide"
+    },
+    {
+      "isbn": "9781449365035",
+      "title": "Speaking JavaScript"
+    }
+  ],
+  "invalidData": {
+    "invalidUserId": "invalid-user-id"
+  }
+}

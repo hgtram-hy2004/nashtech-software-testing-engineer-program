@@ -1,0 +1,28 @@
+{
+  "validUser": 
+  {
+    "name": "Hoang Tram Test User",
+    "emailPrefix": "testuser",
+    "emailDomain": "gmail.com",
+    "gender": "female",
+    "status": "active"
+  },
+
+  "schemaTestUser": 
+  {
+    "name": "Schema Test User",
+    "emailPrefix": "schematest",
+    "emailDomain": "gmail.com",
+    "gender": "female",
+    "status": "active"
+  },
+
+  "updatedUser": 
+  {
+    "name": "Hoang Tram Updated",
+    "emailPrefix": "updated",
+    "emailDomain": "gmail.com",
+    "gender": "female",
+    "status": "inactive"
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "type": "object",
+  "required": ["userId", "username", "books"],
+  "properties": {
+    "userId": {
+      "type": "string"
+    },
+    "username": {
+      "type": "string"
+    },
+    "books": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["isbn", "title"],
+        "properties": {
+          "isbn": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "subTitle": {
+            "type": ["string", "null"]
+          },
+          "author": {
+            "type": ["string", "null"]
+          },
+          "publish_date": {
+            "type": ["string", "null"]
+          },
+          "publisher": {
+            "type": ["string", "null"]
+          },
+          "pages": {
+            "type": ["integer", "null"]
+          },
+          "description": {
+            "type": ["string", "null"]
+          },
+          "website": {
+            "type": ["string", "null"]
+          }
+        }
+      }
+    }
+  }
+}
