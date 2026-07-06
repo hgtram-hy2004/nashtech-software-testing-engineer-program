@@ -8,16 +8,20 @@ namespace HuynhHoangTram.Utils
 {
     public class JsonUtils
     {
-         public static T ReadJsonFile<T>(string filePath)
+        public static T ReadJsonFile<T>(string filePath)
         {
-            string fullPath = Path.Combine(AppContext.BaseDirectory,filePath);
+            string fullPath = Path.Combine(AppContext.BaseDirectory, filePath);
             if (!File.Exists(fullPath))
             {
-                throw new FileNotFoundException("Json file was not found: " + fullPath);
+                throw new FileNotFoundException(
+                    "Json file was not found: " + fullPath
+                );
             }
 
             string jsonContent = File.ReadAllText(fullPath);
+
             T? data = JsonConvert.DeserializeObject<T>(jsonContent);
+
             if (data == null)
             {
                 throw new Exception("Cannot deserialize json file: " + fullPath);

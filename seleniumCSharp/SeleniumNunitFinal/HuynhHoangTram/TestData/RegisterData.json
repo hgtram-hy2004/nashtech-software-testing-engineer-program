@@ -1,0 +1,14 @@
+{
+  "FirstName": "Hoang",
+  "LastName": "Tram",
+  "Email": "hoangtram@example.com",
+  "Gender": "Female",
+  "MobileNumber": "0987654321",
+  "DateOfBirth": "21-May-2025",
+  "Subjects": ["Maths", "Computer Science"],
+  "Hobbies": ["Sports", "Music"],
+  "PicturePath": "TestData\\avatar.png",
+  "CurrentAddress": "123 Nguyen Trai Street, Ho Chi Minh City",
+  "State": "NCR",
+  "City": "Delhi"
+}

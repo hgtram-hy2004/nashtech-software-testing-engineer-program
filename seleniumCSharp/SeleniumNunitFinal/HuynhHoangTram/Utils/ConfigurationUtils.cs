@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
-namespace HuynhHoangTram.Utils;
-
-public class ConfigurationUtils
-{ 
-    private static IConfigurationRoot configuration = null!;
+namespace HuynhHoangTram.Utils
+{
+    public class ConfigurationUtils
+    {
+        private static IConfigurationRoot configuration = null!;
 
         public static void ReadConfiguration(string jsonFilePath)
         {
@@ -30,16 +33,13 @@ public class ConfigurationUtils
 
         private static string GetProjectRootDirectory()
         {
-            DirectoryInfo directory =
-                new DirectoryInfo(AppContext.BaseDirectory);
+            DirectoryInfo directory = new DirectoryInfo(AppContext.BaseDirectory);
 
             while (directory != null)
             {
-                bool hasProjectFile =
-                    directory.GetFiles("*.csproj").Any();
+                bool hasProjectFile = directory.GetFiles("*.csproj").Any();
 
-                bool hasConfigurationsFolder =
-                    directory.GetDirectories("Configurations").Any();
+                bool hasConfigurationsFolder = directory.GetDirectories("Configurations").Any();
 
                 if (hasProjectFile && hasConfigurationsFolder)
                 {
@@ -53,4 +53,5 @@ public class ConfigurationUtils
                 "Project root directory was not found."
             );
         }
+    }
 }
