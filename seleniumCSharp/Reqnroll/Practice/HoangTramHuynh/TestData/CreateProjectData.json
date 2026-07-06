@@ -1,0 +1,19 @@
+
+  {
+    "ProjectName": "Project",
+    "ProjectType": "Fixed Price",
+    "ProjectStatus": "Running",
+    "StartDate": "20-May-2026",
+    "EndDate": "30-May-2026",
+    "SizeDay": "10",
+    "Location": "Offshore Vietnam Ho Chi Minh city",
+    "ProjectManager": "PM Le (PM02)",
+    "DeliveryManager": "Anh SM (AnhPLPSM)",
+    "EngagementManager": "Anh SM (AnhPLPSM)",
+    "ShortDescription": "Short description for fixed price project",
+    "LongDescription": "Long description for fixed price project from JSON data",
+    "Technologies": "Selenium CSharp, NUnit, JSON",
+    "ClientName": "Client Fixed Price",
+    "ClientIndustry": "Energy",
+    "ClientDescription": "Client description for fixed price project"
+  }

@@ -1,0 +1,272 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using HoangTramHuynh.Core.UI;
+using HoangTramHuynh.Core.Report;
+using HoangTramHuynh.Component;
+using OpenQA.Selenium;
+
+namespace HoangTramHuynh.Page
+{
+    public class RegisterPage
+    {
+        private readonly Menu _sideBarMenu;
+        public RegisterPage()
+        {
+            _sideBarMenu = new Menu(SideBarMenu, SideBarMenuItem);
+        }
+        private WebObject SideBarMenu(string menuText)
+        {
+            return new WebObject(By.XPath($"//div[contains(@class,'left-pannel')]//div[contains(@class,'header-text') and normalize-space()='{menuText}']"),$"{menuText} Parent Menu");
+        }
+
+        private WebObject SideBarMenuItem(string itemText)
+        {
+            return new WebObject(By.XPath($"//div[contains(@class,'left-pannel')]//a[contains(@class,'router-link')][.//span[normalize-space()='{itemText}']]"), itemText + " Item Menu");
+        }
+        private readonly WebObject _formTitle = new WebObject(By.XPath("//h5[normalize-space(.)='Student Registration Form']"), "Student Registration Form Title");
+        private readonly WebObject _firstnameinput = new WebObject(By.Id("firstName"), "First Name Input");
+        private readonly WebObject _lastnameinput = new WebObject(By.Id("lastName"), "Last Name Input");
+        private readonly WebObject _emailinput = new WebObject(By.Id("userEmail"), "Email Input");
+        private WebObject GenderRadio(string value)
+        {
+            return new WebObject(By.XPath($"//div[@id='genterWrapper']//input [@value='{value}']"), "Gender Radio " + value + "Input");
+        }
+        private readonly WebObject _mobileinput = new WebObject(By.Id("userNumber"), "Mobile Input");
+        private readonly WebObject _dateofbirthinput = new WebObject(By.Id("dateOfBirthInput"), "Date Of Birth Input");
+        private readonly WebObject _calendarContainer = new WebObject(By.CssSelector("div.react-datepicker"), "Date Picker Calendar");
+        private readonly WebObject _monthdropdown = new WebObject(By.CssSelector("select.react-datepicker__month-select"), "Month Dropdown");
+        private readonly WebObject _yeardropdown = new WebObject(By.CssSelector("select.react-datepicker__year-select"), "Year Dropdown");
+        private WebObject MonthOption(string monthValue)
+        {
+            return new WebObject(By.XPath($"//select[contains(@class,'react-datepicker__month-select')]/option[@value='{monthValue}']"), "Month Option " + monthValue);
+        }
+
+        private WebObject YearOption(string year)
+        {
+            return new WebObject(By.XPath($"//select[contains(@class,'react-datepicker__year-select')]/option[@value='{year}']"), "Year Option " + year);
+        }
+
+        private WebObject DayOption(string day)
+        {
+            return new WebObject(By.XPath($"//div[contains(@class,'react-datepicker')]//div[contains(@class,'react-datepicker__day') and not(contains(@class,'outside-month')) and normalize-space(.)='{day}']"), "Day " + day);
+        }
+        private readonly WebObject _subjectsInput = new WebObject(By.CssSelector("input#subjectsInput"), "Subjects Input");
+        private readonly WebObject _subjectsDropdownList = new WebObject(By.XPath("//div[contains(@class,'subjects-auto-complete__menu')]"), "Subjects Dropdown List");
+
+        private WebObject SubjectOption(string subject)
+        {
+            return new WebObject(By.XPath($"//div[contains(@class,'subjects-auto-complete__option') and normalize-space(.)='{subject}']"), subject + " Subject Option");
+        }
+        private WebObject HobbiesCheckbox(string value)
+        {
+            return new WebObject(By.XPath($"//div[@id='hobbiesWrapper']//label[normalize-space()='{value}']"), "Hobbies Checkbox " + value + "Input");
+        }
+        private readonly FileUpload _pictureupload = new FileUpload(new WebObject(By.CssSelector("input#uploadPicture"), "Picture Upload"));
+        private readonly WebObject _currentaddressinput = new WebObject(By.Id("currentAddress"), "Current Address Input");
+        private readonly WebObject _stateDropdown = new WebObject(By.CssSelector("div#state"), "State Dropdown");
+        private readonly WebObject _cityDropdown = new WebObject(By.CssSelector("div#city"), "City Dropdown");
+        private readonly WebObject _DropdownList = new WebObject(By.XPath("//div[@role='listbox']"), "State and City Dropdown List");
+        private WebObject DropdownOption(string optionText)
+        {
+            return new WebObject(By.XPath($"//div[@role='option' and normalize-space(.)='{optionText}']"), optionText + " Dropdown Option");
+        }
+        private readonly WebObject _submitbutton = new WebObject(By.CssSelector("button#submit"), "Submit Button");
+        private readonly WebObject _submittedmodal = new WebObject(By.CssSelector("div.modal-content"), "Submitted Modal");
+        private readonly WebObject _submittedmodalTitle = new WebObject(By.XPath("//div[@class='modal-title h4' and normalize-space(.)='Thanks for submitting the form']"), "Submitted Modal Title");
+        public void NavigateToPracticeForm()
+        {
+            _sideBarMenu.SelectMenuItem("Practice Form");
+            ReportLog.Info("Navigated to Practice Form page.");
+        }
+        public bool IsRegistrationFormDisplayed()
+        {
+            ReportLog.Info("Checking if Student Registration Form is displayed.");
+            return _formTitle.IsElementDisplayed();
+        }
+        private WebObject SubmittedValueByLabel(string label)
+        {
+            return new WebObject(By.XPath($"//div[contains(@class,'modal-content')]//td[normalize-space(.)='{label}']/following-sibling::td"), label + " Submitted Value");
+        }
+
+        public void EnterFirstName(string firstName)
+        {
+            _firstnameinput.EnterText(firstName);
+            ReportLog.Info($"Entered First Name: {firstName}");
+        }
+
+        public void EnterLastName(string lastName)
+        {
+            _lastnameinput.EnterText(lastName);
+            ReportLog.Info($"Entered Last Name: {lastName}");
+        }
+
+        public void EnterEmail(string email)
+        {
+            _emailinput.EnterText(email);
+            ReportLog.Info($"Entered Email: {email}");
+        }
+
+        public void SelectGender(string gender)
+        {
+            GenderRadio(gender).ClickOnElement();
+            ReportLog.Info($"Selected Gender: {gender}");   
+        }
+
+        public void EnterMobileNumber(string mobileNumber)
+        {
+            _mobileinput.EnterText(mobileNumber);
+            ReportLog.Info($"Entered Mobile Number: {mobileNumber}");
+        }
+
+        public void SelectDateOfBirth(string dateOfBirth)
+        {
+            DatePicker datePicker = new DatePicker(
+                _dateofbirthinput,
+                _calendarContainer,
+                _yeardropdown,
+                _monthdropdown,
+                YearOption,
+                MonthOption,
+                DayOption
+            );
+
+            datePicker.SelectDate(dateOfBirth);
+            ReportLog.Info($"Selected Date of Birth: {dateOfBirth}");
+        }
+
+        private AutoCompleteInput SubjectsAutoComplete()
+        {
+            ReportLog.Info("Initializing Subjects AutoComplete Input.");
+            return new AutoCompleteInput(
+                _subjectsInput,
+                _subjectsDropdownList,
+                SubjectOption
+            );
+        }
+
+        public void SelectSubject(string text, string subject)
+        {
+            SubjectsAutoComplete().TypeTextAndSelectOption(text, subject);
+            ReportLog.Info($"Selected Subject: {subject}");
+        }
+
+        public void SelectSubjects(string[]? subjects)
+        {
+            if (subjects == null || subjects.Length == 0)
+            {
+                return;
+            }
+
+            foreach (string subject in subjects)
+            {
+                ReportLog.Info($"Selecting subject: {subject}");
+                SelectSubject(subject.Substring(0, 1), subject);
+            }
+        }
+        public void SelectHobby(string hobby)
+        {
+            HobbiesCheckbox(hobby).ClickOnElement();
+            ReportLog.Info($"Selected Hobby: {hobby}");
+        }
+        public void SelectHobbies(params string[] hobbies)
+        {
+            foreach (string hobby in hobbies)
+            {
+                SelectHobby(hobby);
+            }
+            ReportLog.Info($"Selected Hobbies: {string.Join(", ", hobbies)}");
+        }
+        public void SelectPicture(string filePath)
+        {
+            _pictureupload.SelectFile(filePath);
+            ReportLog.Info($"Selected Picture: {filePath}");
+        }
+
+        public void EnterCurrentAddress(string address)
+        {
+            _currentaddressinput.EnterText(address);
+            ReportLog.Info($"Entered Current Address: {address}");
+        }
+
+        public void SelectState(string state)
+        {
+            Dropdown dropdown = new Dropdown(
+            _stateDropdown,
+            _DropdownList,
+            DropdownOption);
+            dropdown.SelectOption(state);
+            ReportLog.Info($"Selected State: {state}");
+        }
+
+        public void SelectCity(string city)
+        {
+            Dropdown dropdown = new Dropdown(
+            _cityDropdown,
+            _DropdownList,
+            DropdownOption);
+            dropdown.SelectOption(city);
+            ReportLog.Info($"Selected City: {city}");
+        }
+
+        public void ClickSubmitButton()
+        {
+            _submitbutton.ScrollToElement();
+            _submitbutton.ClickOnElement();
+            ReportLog.Info("Clicked on Submit button.");
+        }
+
+        public void FillRegistrationForm(string firstName, string lastName, string gender, string mobileNumber, string? email = null, string? dateOfBirth = null, string[]? subjects = null, string[]? hobbies = null, string? picturePath = null, string? currentAddress = null, string? state = null, string? city = null)
+        {
+            EnterFirstName(firstName);
+            EnterLastName(lastName);
+            SelectGender(gender);
+            EnterMobileNumber(mobileNumber);
+            if (!string.IsNullOrWhiteSpace(email))
+            {
+                EnterEmail(email);
+            }
+            if (!string.IsNullOrWhiteSpace(dateOfBirth))
+            {
+                SelectDateOfBirth(dateOfBirth);
+            }
+            if (subjects != null && subjects.Length > 0)
+            {
+                SelectSubjects(subjects);
+            }
+            if (hobbies != null && hobbies.Length > 0)
+            {
+                SelectHobbies(hobbies);
+            }
+            if (!string.IsNullOrWhiteSpace(picturePath))
+            {
+                SelectPicture(picturePath);
+            }
+            if (!string.IsNullOrWhiteSpace(currentAddress))
+            {
+                EnterCurrentAddress(currentAddress);
+            }
+            if (!string.IsNullOrWhiteSpace(state))
+            {
+                SelectState(state);
+            }
+            if (!string.IsNullOrWhiteSpace(city))
+            {
+                SelectCity(city);
+            }
+        }
+        public bool IsSubmittedModalDisplayed()
+        {
+            ReportLog.Info("Checking if Submitted Modal is displayed.");
+            return _submittedmodal.IsElementDisplayed();
+        }
+
+        public string GetSubmittedValue(string label)
+        {
+            ReportLog.Info($"Retrieving submitted value for label: {label}");
+            return SubmittedValueByLabel(label).GetText();
+        }
+
+    }
+}
