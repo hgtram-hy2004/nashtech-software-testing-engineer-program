@@ -1,0 +1,1 @@
+export const BARE_URL ='http://192.168.237.15:3000';

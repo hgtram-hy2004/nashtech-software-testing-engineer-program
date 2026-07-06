@@ -1,0 +1,23 @@
+{
+  "validAdminAccount": {
+    "username": "Admin2",
+    "password": "Fxu1tw^E"
+  },
+  "invalidAccounts": [
+    {
+      "username": "Admin2",
+      "password": "",
+      "caseName": "password is blank"
+    },
+    {
+      "username": "",
+      "password": "Fxu1tw^E",
+      "caseName": "username is blank"
+    },
+    {
+      "username": "Admin1",
+      "password": "qp$#tGu3",
+      "caseName": "username and password are invalid"
+    }
+    ]
+}
