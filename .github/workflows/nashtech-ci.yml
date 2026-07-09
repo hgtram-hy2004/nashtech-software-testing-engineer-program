@@ -1,0 +1,196 @@
+name: NashTech Software Testing Program CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  DOTNET_NOLOGO: "true"
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: "true"
+  NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+  CI_HEADLESS: "true"
+  CHROME_BIN: "/usr/bin/google-chrome"
+  WebDriverCommandTimeout: "180"
+
+jobs:
+  dotnet-tests:
+    name: .NET Tests - ${{ matrix.project.name }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        project:
+          - name: RestSharp API Testing
+            path: restsharp
+            need_chrome: false
+            check_base_url: false
+
+          - name: Selenium CSharp Automation
+            path: seleniumCSharp
+            need_chrome: true
+            check_base_url: true
+
+    env:
+      Browser: ${{ vars.BROWSER }}
+      BaseUrl: ${{ secrets.BASE_URL }}
+      TimeOut: ${{ vars.TIMEOUT }}
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: .nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles(format('{0}/**/*.csproj', matrix.project.path)) }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Find solution files
+        working-directory: ${{ matrix.project.path }}
+        shell: bash
+        run: |
+          find . \( -name "*.sln" -o -name "*.slnx" \) -print > "$RUNNER_TEMP/solutions.txt"
+          cat "$RUNNER_TEMP/solutions.txt"
+
+          if [ ! -s "$RUNNER_TEMP/solutions.txt" ]; then
+            echo "ERROR: No .NET solution file was found in ${{ matrix.project.path }}"
+            exit 1
+          fi
+
+      - name: Restore dependencies
+        working-directory: ${{ matrix.project.path }}
+        shell: bash
+        run: |
+          while IFS= read -r solution; do
+            echo "Restoring $solution"
+            dotnet restore "$solution"
+          done < "$RUNNER_TEMP/solutions.txt"
+
+      - name: Build project
+        working-directory: ${{ matrix.project.path }}
+        shell: bash
+        run: |
+          while IFS= read -r solution; do
+            echo "Building $solution"
+            dotnet build "$solution" --configuration Release --no-restore
+          done < "$RUNNER_TEMP/solutions.txt"
+
+      - name: Install Google Chrome for Selenium tests
+        if: ${{ matrix.project.need_chrome }}
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget curl gnupg ca-certificates
+          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor | sudo tee /usr/share/keyrings/google-linux-signing-keyring.gpg > /dev/null
+          echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-linux-signing-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+          google-chrome --version
+
+      - name: Validate test environment variables
+        if: ${{ matrix.project.check_base_url }}
+        shell: bash
+        run: |
+          test -n "$Browser" || (echo "ERROR: Browser GitHub variable is not set" && exit 1)
+          test -n "$BaseUrl" || (echo "ERROR: BASE_URL GitHub secret is not set" && exit 1)
+          test -n "$TimeOut" || (echo "ERROR: TIMEOUT GitHub variable is not set" && exit 1)
+
+      - name: Check BaseUrl
+        if: ${{ matrix.project.check_base_url }}
+        shell: bash
+        run: |
+          curl --fail --show-error --location --max-time 30 "$BaseUrl" > /dev/null
+
+      - name: Run .NET tests
+        working-directory: ${{ matrix.project.path }}
+        shell: bash
+        run: |
+          RESULTS_DIR="${{ github.workspace }}/TestResults/${{ matrix.project.path }}"
+          mkdir -p "$RESULTS_DIR"
+
+          while IFS= read -r solution; do
+            SAFE_NAME=$(basename "$solution" | tr '. ' '__')
+            echo "Running tests for $solution"
+
+            dotnet test "$solution" \
+              --configuration Release \
+              --no-build \
+              --logger "trx;LogFileName=${SAFE_NAME}.trx" \
+              --collect:"XPlat Code Coverage" \
+              --results-directory "$RESULTS_DIR"
+          done < "$RUNNER_TEMP/solutions.txt"
+
+      - name: Prepare coverage report
+        if: always()
+        shell: bash
+        run: |
+          RESULTS_DIR="${{ github.workspace }}/TestResults/${{ matrix.project.path }}"
+          mkdir -p "$RESULTS_DIR/Coverage"
+
+          find "$RESULTS_DIR" -name coverage.cobertura.xml \
+            -not -path "$RESULTS_DIR/Coverage/*" \
+            -exec cp {} "$RESULTS_DIR/Coverage/coverage.cobertura.xml" \; -quit || true
+
+      - name: Upload .NET test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dotnet-test-results-${{ matrix.project.path }}
+          path: TestResults/${{ matrix.project.path }}
+          retention-days: 7
+
+  playwright-tests:
+    name: Playwright TypeScript Tests
+    runs-on: ubuntu-latest
+
+    env:
+      CI: "true"
+      BASE_URL: ${{ secrets.BASE_URL }}
+      BaseUrl: ${{ secrets.BASE_URL }}
+
+    defaults:
+      run:
+        working-directory: playwright
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run Playwright tests
+        run: npx playwright test
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright/playwright-report/
+          retention-days: 7
